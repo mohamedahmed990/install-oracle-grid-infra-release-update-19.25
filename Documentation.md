@@ -4,8 +4,26 @@ Before beginning patch application, check the consistency of inventory informati
 
 ```bash
 
-<ORACLE_HOME>/OPatch/opatch lsinventory -detail -oh <ORACLE_HOME>
+$ORACLE_HOME/OPatch/opatch lsinventory -detail -oh &ORACLE_HOME
 
 ```
 
-If this command succeeds, it lists the Oracle components that are installed in the home. Save the output so that you have the status prior to the patch application.
+-If this command succeeds, it lists the Oracle components that are installed in the home. Save the output so that you have the status prior to the patch application.
+-If this command fails, contact Oracle Support for assistance.
+
+----
+
+## **Download and Unzip the Patch**
+
+To apply the patch, it must be accessible from all nodes in the Oracle cluster. Download the patch and unzip it to a shared location called the `<UNZIPPED_PATCH_LOCATION>`. This directory must be empty and cannot be `/tmp`. Additionally, the directory should have read permission for the `ORA_INSTALL` group:
+
+```bash
+cd <UNZIPPED_PATCH_LOCATION>
+```
+
+Ensure that the directory is empty:
+
+```bash
+ls
+```
+
