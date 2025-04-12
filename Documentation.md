@@ -1,195 +1,151 @@
-Here’s a neatly **ordered and structured patching plan** that follows the correct **logical and chronological flow**:
+# **Oracle RAC Patch Installation Guide (2-Node Cluster)**  
+**Patch 36916690 - GI Release Update 19.25.0.0.241015**  
+
+This guide provides **step-by-step instructions** for patching a **2-node Oracle RAC** environment with detailed explanations.  
 
 ---
 
-## ✅ **Oracle Grid Infrastructure & RAC DB Patching Plan**
+## **📌 Pre-Patch Checklist**  
+### **1. Verify OPatch Version**  
+```bash
+$ORACLE_HOME/OPatch/opatch version
+```  
+🔹 **Requirement**: OPatch **12.2.0.1.43 or later**  
+🔹 **Why?** Older versions may fail or miss critical fixes.  
+
+### **2. Backup Oracle Homes & Inventory**  
+```bash
+# Backup Grid Home
+tar -czvf /backup/grid_home_backup.tar.gz $GRID_HOME
+
+# Backup Oracle Home
+tar -czvf /backup/oracle_home_backup.tar.gz $ORACLE_HOME
+
+# Backup Central Inventory
+tar -czvf /backup/oraInventory.tar.gz $(cat /etc/oraInst.loc | grep inventory_loc | cut -d= -f2)
+```  
+🔹 **Why?** Ensures rollback is possible if patching fails.  
+
+### **3. Check for Conflicts**  
+```bash
+$ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <PATCH_DIR>/36916690/36912597
+```  
+🔹 **Why?** Detects if existing patches conflict with the new update.  
+
+### **4. Stop Databases & Services**  
+```bash
+# Stop all databases on both nodes
+srvctl stop database -d <DB_UNIQUE_NAME>
+
+# Verify shutdown
+srvctl status database -d <DB_UNIQUE_NAME>
+```  
+🔹 **Why?** Prevents corruption during patching.  
 
 ---
 
-### 🔧 **1. Pre-Patching Preparation**
+## **🔧 Patching Steps (Node 1 First, Then Node 2)**  
 
-#### 1.1 **OPatch Utility Requirements**
-- Required version: **12.2.0.1.43** or later
-- Download from: [Patch 6880880](https://support.oracle.com/epmos/faces/PatchDetail?patchId=6880880)
-- Extract and install in **each Oracle home** (GI and DB) as the **home owner**
-- Check `README.txt` for installation steps
-- Version 12.2.0.1.37+ cleans up **inactive patches**
-
-#### 1.2 **Validate Oracle Inventory**
-Run this for each home:
+### **Step 1: Patch Grid Infrastructure (GI) on Node 1**  
 ```bash
-$ORACLE_HOME/OPatch/opatch lsinventory -detail -oh $ORACLE_HOME
-```
+# As root, apply GI patch on Node 1
+<GI_HOME>/OPatch/opatchauto apply <PATCH_DIR>/36916690 -oh <GI_HOME>
+```  
+🔹 **What Happens?**  
+- OPatchAuto updates Grid Infrastructure binaries.  
+- Automatically restarts cluster services.  
+
+### **Step 2: Patch Oracle Home on Node 1**  
+```bash
+# As root, apply DB patch on Node 1
+<GI_HOME>/OPatch/opatchauto apply <PATCH_DIR>/36916690 -oh <ORACLE_HOME>
+```  
+🔹 **What Happens?**  
+- Updates Oracle RAC binaries.  
+- Restarts database services on Node 1.  
+
+### **Step 3: Verify Node 1 Patch**  
+```bash
+# Check applied patches
+<ORACLE_HOME>/OPatch/opatch lsinventory
+
+# Verify cluster status
+crsctl check cluster -all
+```  
+
+### **Step 4: Repeat Steps 1-3 on Node 2**  
+🔹 **Why Sequentially?** Ensures **rolling update** (minimal downtime).  
 
 ---
 
-### 📦 **2. Patch Setup and Checks**
+## **🔄 Post-Patch Steps (On One Node Only)**  
 
-#### 2.1 **Download & Extract Patch**
-- Download **Patch 36916690**
-- Extract to a **shared location** (not `/tmp`)
-- Ensure it's **readable by `ORA_INSTALL` group**:
+### **Step 5: Run Datapatch (SQL Updates)**  
 ```bash
-unzip p36916690_190000_<platform>.zip
-```
+cd $ORACLE_HOME/OPatch
+./datapatch -verbose
+```  
+🔹 **What Happens?**  
+- Applies SQL changes to the database.  
+- Updates `dba_registry_sqlpatch`.  
 
-#### 2.2 **Conflict Check**
-Run for each sub-patch:
+### **Step 6: Recompile Invalid Objects**  
+```sql
+-- Run in SQL*Plus as SYSDBA
+@?/rdbms/admin/utlrp.sql
+```  
+🔹 **Why?** Ensures all database objects are valid.  
+
+### **Step 7: Start All Instances**  
 ```bash
-$ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /patch/36916690/<subpatch_id>
-```
-> Run all 5 sub-patches for **GI**, only 2 for **DB**
-
-#### 2.3 **System Space Check**
-**Create file list:**
-
-- For GI:
-```bash
-cat <<EOF > /tmp/patch_list_gihome.txt
-/patch/36916690/36912597
-/patch/36916690/36917416
-/patch/36916690/36917397
-/patch/36916690/36940756
-/patch/36916690/36758186
-EOF
-```
-
-- For DB:
-```bash
-cat <<EOF > /tmp/patch_list_dbhome.txt
-/patch/36916690/36912597
-/patch/36916690/36917416
-EOF
-```
-
-**Check space:**
-```bash
-$ORACLE_HOME/OPatch/opatch prereq CheckSystemSpace -phBaseFile /tmp/patch_list_gihome.txt
-```
+srvctl start database -d <DB_UNIQUE_NAME>
+```  
 
 ---
 
-### 🔍 **3. Cluster Readiness Checks**
-
-#### 3.1 **Pre-Patch Check**
+## **🛠 Rollback Procedure (If Needed)**  
+### **1. Stop Databases**  
 ```bash
-cluvfy stage -pre patch -n <node_list> -rolling
-```
+srvctl stop database -d <DB_UNIQUE_NAME>
+```  
 
-> Use CVU from GI home or standalone [Patch 30839369](https://support.oracle.com/epmos/faces/PatchDetail?patchId=30839369)
+### **2. Rollback Patch on Both Nodes**  
+```bash
+# On each node:
+<GI_HOME>/OPatch/opatchauto rollback <PATCH_DIR>/36916690
+```  
+
+### **3. Restart Cluster & DB**  
+```bash
+crsctl stop cluster -all
+crsctl start cluster -all
+srvctl start database -d <DB_UNIQUE_NAME>
+```  
 
 ---
 
-### ⚙️ **4. Patching Process Options**
-
-#### 4.1 **OPatchAuto Utility Overview**
-- Automates patching for **Grid** and **RAC DB homes**
-- Must be run as **root**
-- Supports **in-place**, **out-of-place**, and **parallel** patching
-
-**Add OPatchAuto to PATH:**
-```bash
-export PATH=$PATH:<GI_HOME>/OPatch
-cd <UNZIPPED_PATCH_LOCATION>
-```
-
-#### 4.2 **Common OPatchAuto Commands**
-
-| Operation                     | Command Example |
-|------------------------------|-----------------|
-| Patch Grid + RAC DB homes    | `opatchauto apply <UNZIPPED_PATCH_LOCATION>/36916690` |
-| Patch Grid home only         | `opatchauto apply <UNZIPPED_PATCH_LOCATION>/36916690 -oh <GI_HOME>` |
-| Patch RAC DB home(s) only    | `opatchauto apply <UNZIPPED_PATCH_LOCATION>/36916690 -oh <oracle_home1>,<oracle_home2>` |
-| Rollback Grid + RAC DB homes | `opatchauto rollback <UNZIPPED_PATCH_LOCATION>/36916690` |
-| Rollback Grid home only      | `opatchauto rollback <UNZIPPED_PATCH_LOCATION>/36916690 -oh <GI_HOME>` |
-| Rollback RAC DB home(s) only | `opatchauto rollback <UNZIPPED_PATCH_LOCATION>/36916690 -oh <oracle_home1>,<oracle_home2>` |
+## **🚨 Known Issues & Fixes**  
+| Issue | Solution |  
+|-------|----------|  
+| `ACFS drivers not loading` | **Reboot node** after patching |  
+| `Datapatch fails` | Check `$ORACLE_BASE/cfgtoollogs/sqlpatch` logs |  
+| `OPatchAuto hangs` | Kill stuck processes & retry |  
 
 ---
 
-### 🔁 **5. Patching Execution by Use Case**
-
-#### 🔹 **Case 1: RAC with Non-shared Grid and DB Homes**
-Run on **each node**:
-```bash
-# <GI_HOME>/OPatch/opatchauto apply <UNZIPPED_PATCH_LOCATION>/36916690
-```
+## **📚 References**  
+- [Oracle GI Patching Guide](https://docs.oracle.com)  
+- [My Oracle Support Doc 2246888.1](https://support.oracle.com)  
 
 ---
 
-#### 🔹 **Case 2: RAC with Shared DB Home and ACFS**
-1. Stop DB:
-```bash
-$ <ORACLE_HOME>/bin/srvctl stop database -d <db_unique_name>
-```
-2. Unmount ACFS (first node only)
-3. Patch GI (first node):
-```bash
-# <GI_HOME>/OPatch/opatchauto apply <UNZIPPED_PATCH_LOCATION>/36916690 -oh <GI_HOME>
-```
-4. Reboot if required
-5. Remount ACFS
-6. Patch DB:
-```bash
-# <GI_HOME>/OPatch/opatchauto apply <UNZIPPED_PATCH_LOCATION>/36916690 -oh <ORACLE_HOME>
-```
-7. Start instance:
-```bash
-$ <ORACLE_HOME>/bin/srvctl start instance -d <db_unique_name> -n <node_name>
-```
-8. Repeat steps 2–7 for other nodes
+### **✅ Summary**  
+1. **Pre-check** (Backup, OPatch, conflicts).  
+2. **Patch Node 1** (GI → Oracle Home).  
+3. **Patch Node 2** (Same as Node 1).  
+4. **Post-patch** (`datapatch`, `utlrp.sql`).  
+5. **Verify** (`opatch lsinventory`, `crsctl check cluster`).  
 
----
+This ensures a **smooth, zero-downtime** RAC patch deployment. 🚀  
 
-#### 🔹 **Case 3: Single-instance DB (Non-GI)**
-1. Shut down all instances and listeners
-2. Apply sub-patch:
-```bash
-cd <UNZIPPED_PATCH_LOCATION>/36916690/36912597
-opatch apply
-```
-
----
-
-### 🛡️ **6. Data Guard — Standby-First Patching**
-
-> See Doc ID [1265700.1](https://support.oracle.com/epmos/faces/DocumentDisplay?id=1265700.1)
-
-1. Apply patch **36912597** to **standby** using `opatch apply`
-2. **Do NOT run `datapatch` on standby**
-3. Apply to **primary**, then run:
-```bash
-$ORACLE_HOME/OPatch/datapatch
-```
-
----
-
-### 🚀 **7. Post-Patching Activities**
-
-#### 7.1 **Post-Patch CVU Check**
-```bash
-cluvfy stage -post patch -n <node_list> -rolling
-```
-
-#### 7.2 **Apply Conflict Resolution Patches**
-Refer to **Section 2.1.8.1** if applicable
-
-#### 7.3 **Manual SQL Patch Loading (if no OPatchAuto)**
-See **Section 2.1.8.2**
-
-#### 7.4 **Upgrade RMAN Catalog**
-See **Section 2.1.8.3**
-
-#### 7.5 **Review Optimizer Plan Changes**
-May require performance plan evaluation — see **Section 2.1.8.4**
-
----
-
-### 🧰 **8. Reference Tools & Documentation**
-
-- [1091294.1](https://support.oracle.com/epmos/faces/DocumentDisplay?id=1091294.1): Conflict Checker Tool  
-- [1061295.1](https://support.oracle.com/epmos/faces/DocumentDisplay?id=1061295.1): Patch Conflict Resolution  
-- [603505.2](https://support.oracle.com/epmos/faces/DocumentDisplay?id=603505.2): Oracle Patch How-to Videos  
-
----
-
-Let me know if you want this in **Markdown**, **Word**, **PDF**, or a **shell script summary** for practical use!
+Would you like a **troubleshooting appendix** for common errors?
