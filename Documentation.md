@@ -1,7 +1,7 @@
 ## **Table of content**
-  1. [Validation of Oracle Inventory](#validation-of-oracle-inventory)
-  2. [Download and Unzip the Patch](#download-and-Unzip-the-patch)
-  3. [Run OPatch Conflict Check](#run-opatch-conflict-check)
+  +. [Validation of Oracle Inventory](#validation-of-oracle-inventory)
+  +. [Download and Unzip the Patch](#download-and-Unzip-the-patch)
+  +. [Run OPatch Conflict Check](#run-opatch-conflict-check)
 
 
 
@@ -42,6 +42,8 @@ unzip p36916690_190000_<platform>.zip
 
 ```
 
+----
+
 ## **Run OPatch Conflict Check**
 
 Determine whether any currently installed one-off patches conflict with this patch 36916690 as follows:
@@ -68,6 +70,8 @@ Determine whether any currently installed one-off patches conflict with this pat
     $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /home/grid/p36916690/36916690/36917416
 
   ```
+-----
+
 ## **Run OPatch System Space Check**
 
 Check if enough free space is available on the ORACLE_HOME filesystem for the patches to be applied as given below:
@@ -103,7 +107,9 @@ Check if enough free space is available on the ORACLE_HOME filesystem for the pa
     2. Run OPatch command to check if enough free space is available in the Oracle home:
        
        ```bash
-         $ORACLE_HOME/OPatch/opatch prereq CheckSystemSpace -phBaseFile /tmp/patch_list_dbhome.txt  
+       
+         $ORACLE_HOME/OPatch/opatch prereq CheckSystemSpace -phBaseFile /tmp/patch_list_dbhome.txt
+        
        ```
 
        
