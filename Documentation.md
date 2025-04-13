@@ -68,8 +68,8 @@ Determine whether any currently installed one-off patches conflict with this pat
     
   ```bash
 
-    $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /home/grid/p36916690/36916690/36912597
-    $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /home/grid/p36916690/36916690/36917416
+    $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /home/oracle/p36916690/36916690/36912597
+    $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /home/oracle/p36916690/36916690/36917416
 
   ```
 -----
@@ -102,8 +102,8 @@ Check if enough free space is available on the ORACLE_HOME filesystem for the pa
        
       ```bash
         cat /tmp/patch_list_dbhome.txt
-        /home/grid/p36916690/36916690/36912597
-        /home/grid/p36916690/36916690/36917416
+        /home/oracle/p36916690/36916690/36912597
+        /home/oracle/p36916690/36916690/36917416
       ```
 
     2. Run OPatch command to check if enough free space is available in the Oracle home:
