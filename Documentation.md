@@ -1,4 +1,4 @@
-## **Table of content 
+## **Table of content**
   1. [Validation of Oracle Inventory](#validation-of-oracle-inventory)
   2. [Download and Unzip the Patch](#download-and-Unzip-the-patch)
   3. [Run OPatch Conflict Check](#run-opatch-conflict-check)
