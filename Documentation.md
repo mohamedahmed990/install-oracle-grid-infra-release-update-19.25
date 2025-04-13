@@ -27,3 +27,36 @@ Ensure that the directory is empty:
 ls
 ```
 
+Unzip the patch as the Grid home owner except for installations that do not have any Grid homes. For installations where this patch is applied to the Oracle home only, the patch must be unzipped as the Oracle home owner:
+
+```bash
+
+unzip p36916690_190000_<platform>.zip
+
+```
+
+## **  Run OPatch Conflict Check **
+
+Determine whether any currently installed one-off patches conflict with this patch 36916690 as follows:
+  - As the Grid home user:
+  ```bash
+    $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/36916690/36912597
+  
+   $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/36916690/36917416
+  
+   $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/36916690/36917397
+  
+   $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/36916690/36940756
+  
+   $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/36916690/36758186
+  ```
+  - For Oracle home, as home user:
+      ```bash
+        $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/36916690/36912597
+      % $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/36916690/36917416
+
+      ```
+## **Run OPatch System Space Check**
+      
+    
+
