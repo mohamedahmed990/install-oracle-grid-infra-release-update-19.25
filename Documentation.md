@@ -1,4 +1,46 @@
-## ** Validation of Oracle Inventory **
+## **Table of content 
+  1. [Validation of Oracle Inventory](#Validation of Oracle Inventory)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<a name="Validation of Oracle Inventory" />
+## **Validation of Oracle Inventory**
 
 Before beginning patch application, check the consistency of inventory information for Grid home and each Oracle home to be patched. Run this command as the respective Oracle home owner to check the consistency: 
 
@@ -35,11 +77,13 @@ unzip p36916690_190000_<platform>.zip
 
 ```
 
-## **  Run OPatch Conflict Check **
+## **Run OPatch Conflict Check**
 
 Determine whether any currently installed one-off patches conflict with this patch 36916690 as follows:
   - As the Grid home user:
+    
   ```bash
+
     $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /home/grid/p36916690/36916690/36912597
   
     $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /home/grid/p36916690/36916690/36917416
@@ -49,9 +93,12 @@ Determine whether any currently installed one-off patches conflict with this pat
     $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /home/grid/p36916690/36916690/36940756
   
     $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /home/grid/p36916690/36916690/36758186
+
   ```
   - For Oracle home, as home user:
+    
   ```bash
+
     $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /home/grid/p36916690/36916690/36912597
     $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /home/grid/p36916690/36916690/36917416
 
@@ -65,6 +112,7 @@ Check if enough free space is available on the ORACLE_HOME filesystem for the pa
        ```bash
        
         cat /tmp/patch_list_gihome.txt
+       
         /home/grid/p36916690/36916690/36912597
         /home/grid/p36916690/36916690/36912597
         /home/grid/p36916690/36916690/36917416
@@ -75,19 +123,22 @@ Check if enough free space is available on the ORACLE_HOME filesystem for the pa
        ```
     2. Run the OPatch command to check if enough free space is available in the Grid Infrastructure home:
       ```bash
-      % $ORACLE_HOME/OPatch/opatch prereq CheckSystemSpace -phBaseFile /tmp/patch_list_gihome.txt
+        $ORACLE_HOME/OPatch/opatch prereq CheckSystemSpace -phBaseFile /tmp/patch_list_gihome.txt
       ```
   - For Oracle home, as home user:
+    
     1. Create file /tmp/patch_list_dbhome.txt with the following content:
+       
       ```bash
-      cat /tmp/patch_list_dbhome.txt
-      /home/grid/p36916690/36916690/36912597
-      /home/grid/p36916690/36916690/36917416
+        cat /tmp/patch_list_dbhome.txt
+        /home/grid/p36916690/36916690/36912597
+        /home/grid/p36916690/36916690/36917416
       ```
 
     2. Run OPatch command to check if enough free space is available in the Oracle home:
+       
        ```bash
-       $ORACLE_HOME/OPatch/opatch prereq CheckSystemSpace -phBaseFile /tmp/patch_list_dbhome.txt  
+         $ORACLE_HOME/OPatch/opatch prereq CheckSystemSpace -phBaseFile /tmp/patch_list_dbhome.txt  
        ```
 
        
