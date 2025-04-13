@@ -40,23 +40,56 @@ unzip p36916690_190000_<platform>.zip
 Determine whether any currently installed one-off patches conflict with this patch 36916690 as follows:
   - As the Grid home user:
   ```bash
-    $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/36916690/36912597
+    $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir p36916690/36916690/36912597
   
-   $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/36916690/36917416
+    $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir p36916690/36916690/36917416
   
-   $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/36916690/36917397
+    $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir p36916690/36916690/36917397
   
-   $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/36916690/36940756
+    $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir p36916690/36916690/36940756
   
-   $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/36916690/36758186
+    $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir p36916690/36916690/36758186
   ```
   - For Oracle home, as home user:
-      ```bash
-        $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/36916690/36912597
-      % $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/36916690/36917416
+  ```bash
+    $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir p36916690/36916690/36912597
+    $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir p36916690/36916690/36917416
 
-      ```
+  ```
 ## **Run OPatch System Space Check**
-      
-    
+
+Check if enough free space is available on the ORACLE_HOME filesystem for the patches to be applied as given below:
+
+  - For Grid Infrastructure home, as home user:
+    1. Create file /tmp/patch_list_gihome.txt with the following content:
+       ```bash
+       
+        cat /tmp/patch_list_gihome.txt
+        p36916690/36916690/36912597
+        p36916690/36916690/36912597
+        p36916690/36916690/36917416
+        p36916690/36916690/36917397
+        p36916690/36916690/36940756
+        p36916690/36916690/36758186
+       
+       ```
+    2. Run the OPatch command to check if enough free space is available in the Grid Infrastructure home:
+      ```bash
+      % $ORACLE_HOME/OPatch/opatch prereq CheckSystemSpace -phBaseFile /tmp/patch_list_gihome.txt
+      ```
+  - For Oracle home, as home user:
+    1. Create file /tmp/patch_list_dbhome.txt with the following content:
+      ```bash
+      cat /tmp/patch_list_dbhome.txt
+      p36916690/36916690/36912597
+      p36916690/36916690/36917416
+      ```
+
+    2. Run OPatch command to check if enough free space is available in the Oracle home:
+       ```bash
+       $ORACLE_HOME/OPatch/opatch prereq CheckSystemSpace -phBaseFile /tmp/patch_list_dbhome.txt  
+       ```
+
+       
+       
 
