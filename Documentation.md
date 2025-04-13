@@ -1,45 +1,10 @@
 ## **Table of content 
-  1. [Validation of Oracle Inventory](#Validation of Oracle Inventory)
+  1. [Validation of Oracle Inventory](#validation-of-oracle-inventory)
+  2. [Download and Unzip the Patch](#download-and-Unzip-the-patch)
+  3. [Run OPatch Conflict Check](#run-opatch-conflict-check)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<a name="Validation of Oracle Inventory" />
 ## **Validation of Oracle Inventory**
 
 Before beginning patch application, check the consistency of inventory information for Grid home and each Oracle home to be patched. Run this command as the respective Oracle home owner to check the consistency: 
