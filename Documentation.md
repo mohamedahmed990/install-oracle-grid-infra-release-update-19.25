@@ -1,7 +1,8 @@
 ## **Table of content**
   +. [Validation of Oracle Inventory](#validation-of-oracle-inventory)
-  +. [Download and Unzip the Patch](#download-and-Unzip-the-patch)
-  +. [Run OPatch Conflict Check](#run-opatch-conflict-check)
+  -. [Download and Unzip the Patch](#download-and-Unzip-the-patch)
+  *. [Run OPatch Conflict Check](#run-opatch-conflict-check)
+  
 
 
 
