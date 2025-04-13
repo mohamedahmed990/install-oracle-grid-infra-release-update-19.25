@@ -13,7 +13,7 @@ Before beginning patch application, check the consistency of inventory informati
 
 ```bash
 
-$ORACLE_HOME/OPatch/opatch lsinventory -detail -oh &ORACLE_HOME
+$ORACLE_HOME/OPatch/opatch lsinventory -detail -oh $ORACLE_HOME
 
 ```
 
