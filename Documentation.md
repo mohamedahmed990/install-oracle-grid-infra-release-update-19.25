@@ -3,6 +3,7 @@
   + [Download and Unzip the Patch](#download-and-Unzip-the-patch)
   + [Run OPatch Conflict Check](#run-opatch-conflict-check)
   + [Patch Installation Checks](#patch-installation-checks)
+  + [Patch Post Installation Instructions](#patch-post-installation-instructions)
 
   
 
@@ -154,9 +155,40 @@ Check if enough free space is available on the ORACLE_HOME filesystem for the pa
   -  Our configuration of the Grid infrastructure and the Oracle RAC database homes is case 1 , so we will apply installation instructions as follow:
 
       -As root user, execute the following command on each node of the cluster:
-
-         ```bash
+     
+        ```bash
 
              <GI_HOME>/OPatch/opatchauto apply <UNZIPPED_PATCH_LOCATION>/36916690
 
              cd <UNZIPPED_PATCH_LOCATION>
+        ```
+
+---------
+
+## **Patch Post Installation Instructions**
+
+  1.  **Load Modified SQL Files into the Database**:
+
+       -  The following steps load modified SQL files into the database. For an Oracle RAC environment, perform these steps on only one node.
+
+             1. For each separate database running on the same shared Oracle home being patched, run the datapatch utility as described in the following table
+
+                  | Steps | Non-CDB or Non-PDB Database            | Steps | Multitenant (CDB/PDB) Oracle Database          |
+                  |-------|----------------------------------------|-------|------------------------------------------------|
+                  | 1     | sqlplus /nolog                         | 1     | sqlplus /nolog                                 |
+                  | 2     | SQL> Connect / as sysdba               | 2     | SQL> Connect / as sysdba                       |
+                  | 3     | SQL> startup                           | 3     | SQL> startup                                   |
+                  | 4     | quit                                   | 4     | SQL> alter pluggable database all open;        |
+                  | 5     | cd $ORACLE_HOME/OPatch                 | 5     | quit                                           |
+                  | 6     | ./datapatch -sanity_checks (optional)  | 6     | cd $ORACLE_HOME/OPatch                         |
+                  | 7     | ./datapatch -verbose                   | 7     | ./datapatch -sanity_checks (optional)          |
+                  |       |                                        | 8     | ./datapatch -verbose                           |
+
+                
+                  
+    
+
+
+
+
+     
