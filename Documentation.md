@@ -192,9 +192,29 @@ Check if enough free space is available on the ORACLE_HOME filesystem for the pa
                   |       |                                        | 8     | ./datapatch -verbose                           |
 
                 
-                  
-    
+             2.  Check the following log files in `$ORACLE_BASE/cfgtoollogs/sqlpatch/36912597/<unique patch ID>` for errors:
 
+                   ```bash
+                   
+                     36912597_apply_<database SID>_<CDB name>_<timestamp>.log
+                   
+                   ```
+
+            3.  Any (pluggable) database that has invalid objects after the execution of datapatch should have catcon.pl run to revalidate those objects. For example:
+
+                   ```bash
+
+                    export PATH=$PATH:$ORACLE_HOME/bin
+                    cd $ORACLE_HOME/rdbms/admin
+                    $ORACLE_HOME/perl/bin/perl $ORACLE_HOME/rdbms/admin/catcon.pl -n 1 -e -b utlrp -d $ORACLE_HOME/rdbms/admin utlrp.sql
+
+                   ```
+
+
+                   
+                  
+
+          
 
 
 
