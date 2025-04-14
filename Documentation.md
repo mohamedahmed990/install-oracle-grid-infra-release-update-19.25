@@ -214,11 +214,21 @@ Check if enough free space is available on the ORACLE_HOME filesystem for the pa
 ## **Patch Installation**
 
   -  The patch instructions will differ based on the configuration of the Grid infrastructure and the Oracle RAC database homes.
+  
   -  The most common configurations are listed as follows:
+    
+      -  Case 1: Oracle RAC, where the Grid home and the Oracle homes are not shared and Oracle ACFS file system is not configured
 
-    Case 1: Oracle RAC, where the Grid home and the Oracle homes are not shared and Oracle ACFS file system is not configured
+      -  Case 2: Oracle RAC, where the Grid home is not shared, Oracle home is shared, and Oracle ACFS may be used
 
-    Case 2: Oracle RAC, where the Grid home is not shared, Oracle home is shared, and Oracle ACFS may be used
+      -  Case 3: Single-instance homes not managed by Oracle Grid Infrastructure
 
-    Case 3: Single-instance homes not managed by Oracle Grid Infrastructure
+  -  Our configuration of the Grid infrastructure and the Oracle RAC database homes is case 1 , so we will apply installation instructions as follow:
 
+      -As root user, execute the following command on each node of the cluster:
+
+         ```bash
+
+             <GI_HOME>/OPatch/opatchauto apply <UNZIPPED_PATCH_LOCATION>/36916690
+
+             cd <UNZIPPED_PATCH_LOCATION>
