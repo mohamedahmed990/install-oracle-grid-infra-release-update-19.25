@@ -51,6 +51,7 @@ unzip p36916690_190000_<platform>.zip
 ## **Run OPatch Conflict Check**
 
 Determine whether any currently installed one-off patches conflict with this patch 36916690 as follows:
+
   - As the Grid home user:
     
   ```bash
@@ -81,32 +82,38 @@ Determine whether any currently installed one-off patches conflict with this pat
 Check if enough free space is available on the ORACLE_HOME filesystem for the patches to be applied as given below:
 
   - For Grid Infrastructure home, as home user:
+    
     1. Create file /tmp/patch_list_gihome.txt with the following content:
        ```bash
        
-        cat /tmp/patch_list_gihome.txt
-       
-        /home/grid/p36916690/36916690/36912597
-        /home/grid/p36916690/36916690/36912597
-        /home/grid/p36916690/36916690/36917416
-        /home/grid/p36916690/36916690/36917397
-        /home/grid/p36916690/36916690/36940756
-        /home/grid/p36916690/36916690/36758186
+          cat /tmp/patch_list_gihome.txt
+         
+          /home/grid/p36916690/36916690/36912597
+          /home/grid/p36916690/36916690/36912597
+          /home/grid/p36916690/36916690/36917416
+          /home/grid/p36916690/36916690/36917397
+          /home/grid/p36916690/36916690/36940756
+          /home/grid/p36916690/36916690/36758186
        
        ```
     2. Run the OPatch command to check if enough free space is available in the Grid Infrastructure home:
-      ```bash
-        $ORACLE_HOME/OPatch/opatch prereq CheckSystemSpace -phBaseFile /tmp/patch_list_gihome.txt
-      ```
+       
+       ```bash
+       
+          $ORACLE_HOME/OPatch/opatch prereq CheckSystemSpace -phBaseFile /tmp/patch_list_gihome.txt
+       
+       ```
   - For Oracle home, as home user:
     
     1. Create file /tmp/patch_list_dbhome.txt with the following content:
        
-      ```bash
+       ```bash
+       
         cat /tmp/patch_list_dbhome.txt
         /home/oracle/p36916690/36916690/36912597
         /home/oracle/p36916690/36916690/36917416
-      ```
+       
+       ```
 
     2. Run OPatch command to check if enough free space is available in the Oracle home:
        
@@ -124,7 +131,7 @@ Check if enough free space is available on the ORACLE_HOME filesystem for the pa
     
       ```bash
 
-      cluvfy stage -pre patch
+          cluvfy stage -pre patch
 
       ```
 
