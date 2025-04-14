@@ -125,7 +125,7 @@ Check if enough free space is available on the ORACLE_HOME filesystem for the pa
 
 ## **Patch Installation Checks** 
 
-  -  The Cluster Verification Utility (CVU) command line interface (CLUVFY) may be used to verify the readiness of the Grid_Home to apply the patch. The CLUVFY command may be issued from the configured Grid_Home or from the downloaded latest version of the CVU standalone release (preferred) from My Oracle Support patch 30839369
+  -  The Cluster Verification Utility (CVU) command line interface (CLUVFY) may be used to verify the readiness of the Grid_Home to apply the patch. The CLUVFY command may be issued from the configured Grid_Home or from the downloaded latest version of the CVU standalone release (preferred) from My Oracle Support patch [30839369](https://updates.oracle.com/Orion/PatchDetails/handle_plat_lang_change?release=600000000153639&plat_lang=233P&patch_file=&file_id=&password_required=&password_required_readme=&merged_trans=&aru=25614629&patch_num=30839369&patch_num_id=4037790&default_release=600000000153639&default_plat_lang=226P&default_compatible_with=&patch_password=&orderby=&direction=&no_header=0&sortcolpressed=&tab_number=)
 
   -  Before applying the patch, the readiness of the Grid_Home can be verified by issuing the following command from any one of the cluster nodes. This command reports issues, if any are detected, in the Grid_Home which may affect the patching process:
     
