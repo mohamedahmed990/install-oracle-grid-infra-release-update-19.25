@@ -211,4 +211,14 @@ Check if enough free space is available on the ORACLE_HOME filesystem for the pa
 
       ```
        
+## **Patch Installation**
+
+  -  The patch instructions will differ based on the configuration of the Grid infrastructure and the Oracle RAC database homes.
+  -  The most common configurations are listed as follows:
+
+    Case 1: Oracle RAC, where the Grid home and the Oracle homes are not shared and Oracle ACFS file system is not configured
+
+    Case 2: Oracle RAC, where the Grid home is not shared, Oracle home is shared, and Oracle ACFS may be used
+
+    Case 3: Single-instance homes not managed by Oracle Grid Infrastructure
 
